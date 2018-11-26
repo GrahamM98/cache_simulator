@@ -24,6 +24,11 @@ for i in range(sets):
     for j in range(ways):
         cache[i][j] = {"tag": None, "val": 0, "data": None, "history": 0}
 
+def updateHistory():
+    for i in range(sets):
+        for j in range(ways):
+            cache[i][j]["history"] += 1
+
 def assign(addr):
     print(addr, end=', ')
     binAddr = bin(int(addr, 0))
@@ -50,7 +55,10 @@ def assign(addr):
             cache[int(index, 0)][j]["tag"] = hex(int(tag, 0))
             cache[int(index, 0)][j]["val"] = 1
             cache[int(index, 0)][j]["data"] = str(cacheLineSize) + "b@" +addr
+            cache[int(index, 0)][j]["history"] = 0
             break
+
+    updateHistory()
 
     print()
     return
