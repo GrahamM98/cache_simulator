@@ -59,13 +59,18 @@ def assign(addr):
     cacheMiss = 1
     
     for j in range(ways):
-        if cache[int(index, 0)][j]["val"] == 0:
-            cache[int(index, 0)][j]["tag"] = hex(int(tag, 0))
-            cache[int(index, 0)][j]["val"] = 1
-            cache[int(index, 0)][j]["data"] = str(cacheLineSize) + "b@" +addr
-            cache[int(index, 0)][j]["history"] = 0
+        if cache[int(index, 0)][j]["tag"] == hex(int(tag, 0)):
             cacheMiss = 0
             break
+
+    if cacheMiss == 1:
+        for j in range(ways):
+            if cache[int(index, 0)][j]["val"] == 0:
+                cache[int(index, 0)][j]["tag"] = hex(int(tag, 0))
+                cache[int(index, 0)][j]["val"] = 1
+                cache[int(index, 0)][j]["data"] = str(cacheLineSize) + "b@" +addr
+                cache[int(index, 0)][j]["history"] = 0
+                break
 
     if cacheMiss == 1:
         missTotal += 1
