@@ -8,6 +8,10 @@ cacheLineSize = 64
 #number of ways per set
 ways = 4
 
+missTotal = 0
+
+requestTotal = 0
+
 #calculates number of bits for offset
 offsetN = int(math.log(cacheLineSize, 2))
 #calculate number of bits for an address, add ten because cache size is in kilobytes
@@ -30,6 +34,8 @@ def updateHistory():
             cache[i][j]["history"] += 1
 
 def assign(addr):
+    global missTotal
+    global requestTotal
     print(addr, end=', ')
     binAddr = bin(int(addr, 0))
     print(binAddr)
@@ -49,14 +55,21 @@ def assign(addr):
     tag = '0b' + binAddr[:-(offsetN+indexN)]
     if tag == '0b': tag = '0b0'
     print("tag: {0}".format(int(tag, 0)))
-
+    
+    cacheMiss = 1
+    
     for j in range(ways):
         if cache[int(index, 0)][j]["val"] == 0:
             cache[int(index, 0)][j]["tag"] = hex(int(tag, 0))
             cache[int(index, 0)][j]["val"] = 1
             cache[int(index, 0)][j]["data"] = str(cacheLineSize) + "b@" +addr
             cache[int(index, 0)][j]["history"] = 0
+            cacheMiss = 0
             break
+
+    if cacheMiss == 1:
+        missTotal += 1
+    requestTotal += 1
 
     updateHistory()
 
@@ -75,4 +88,5 @@ for i in range(sets):
     for j in range(ways):
         print("{0}, {1}, {2}, {3}".format(cache[i][j]["tag"], cache[i][j]["val"], cache[i][j]["data"], cache[i][j]["history"]))
     print()
+print("Miss Rate: {0}%".format((float(missTotal)/float(requestTotal))*100))
     
