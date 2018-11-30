@@ -1,2 +1,3 @@
-#!/usr/bin/env python3
-python3 /src/cacheSim.py
+#!/bin/bash
+INPUT=$1
+python3 src/cacheSim.py $INPUT

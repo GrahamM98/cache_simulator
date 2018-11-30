@@ -2,9 +2,9 @@ import sys
 import math
 
 #cache size in kilobytes
-cacheSize = 4096
+cacheSize = 1024
 #cache line size in bytes
-cacheLineSize = 4
+cacheLineSize = 256
 #number of ways per set
 ways = 16
 
@@ -99,7 +99,7 @@ def assign(addr):
 
     updateHistory()
 
-    print()
+    #print()
     return
 
 file = open(sys.argv[1])
@@ -108,10 +108,13 @@ file = open(sys.argv[1])
 
 for line in file:
     addr = line.split()[-1]
-    assign(addr)
-for i in range(sets):
+    try:
+        assign(addr)
+    except:
+        print("{0} is not a valid address".format(addr))
+#for i in range(sets):
     # print("set: {0}".format(i))
-    for j in range(ways):
+    #for j in range(ways):
     #    print("{0}, {1}, {2}, {3}".format(cache[i][j]["tag"], cache[i][j]["val"], cache[i][j]["data"], cache[i][j]["history"]))
     # print()
 print("Miss Rate: {0}%".format((float(missTotal)/float(requestTotal))*100))
