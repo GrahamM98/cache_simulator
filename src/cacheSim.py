@@ -2,11 +2,11 @@ import sys
 import math
 
 #cache size in kilobytes
-cacheSize = 1
+cacheSize = 4096
 #cache line size in bytes
-cacheLineSize = 64
+cacheLineSize = 4
 #number of ways per set
-ways = 4
+ways = 16
 
 missTotal = 0
 
@@ -60,6 +60,7 @@ def assign(addr):
     print("tag: {0}".format(int(tag, 0)))
 
     cacheMiss = 1
+    replace = 1
 
     for j in range(ways):
         if cache[int(index, 0)][j]["tag"] == hex(int(tag, 0)):
@@ -74,6 +75,7 @@ def assign(addr):
                 cache[int(index, 0)][j]["val"] = 1
                 cache[int(index, 0)][j]["data"] = str(cacheLineSize) + "b@" +addr
                 cache[int(index, 0)][j]["history"] = 0
+                replace = 0
                 break
 
     if cacheMiss == 1:
@@ -83,12 +85,12 @@ def assign(addr):
 
 
     # for loop for replacement policy LRU
-    if cacheMiss == 1:
+    if cacheMiss == 1 and replace == 1:
         target = 0
         maxHist = 0
         for j in range(ways):
             # gets max history reference in memory
-            if cache[int(index, 0)][j]["history"] >= maxHist
+            if cache[int(index, 0)][j]["history"] >= maxHist:
                 maxHist = cache[int(index, 0)][j]["history"]
                 target = j
         cache[int(index, 0)][target]["tag"] = hex(int(tag, 0))
