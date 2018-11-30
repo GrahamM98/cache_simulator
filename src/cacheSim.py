@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 import sys
 import math
 
@@ -28,6 +29,7 @@ for i in range(sets):
     for j in range(ways):
         cache[i][j] = {"tag": None, "val": 0, "data": None, "history": 0}
 
+# function updates the history for each address in memory
 def updateHistory():
     for i in range(sets):
         for j in range(ways):
@@ -37,9 +39,9 @@ def assign(addr):
     global missTotal
     global requestTotal
 
-    print(addr, end=', ')
+    # print(addr, end=', ')
     binAddr = bin(int(addr, 0))
-    print(binAddr)
+    # print(binAddr)
 
     # goes to second character in input line of address
     binAddr = binAddr[2:]
@@ -47,17 +49,17 @@ def assign(addr):
     # find offset of address
     offset = '0b' + binAddr[-offsetN:]
     if offset == '0b': offset = '0b0'
-    print("offset: {0}".format(int(offset, 0)))
+    # print("offset: {0}".format(int(offset, 0)))
 
     # find set index of current address
     index = '0b' + binAddr[-(offsetN+indexN):-offsetN]
     if index == '0b': index = '0b0'
-    print("set index: {0}".format(int(index, 0)))
+    # print("set index: {0}".format(int(index, 0)))
 
     #find tag of current address
     tag = '0b' + binAddr[:-(offsetN+indexN)]
     if tag == '0b': tag = '0b0'
-    print("tag: {0}".format(int(tag, 0)))
+    # print("tag: {0}".format(int(tag, 0)))
 
     cacheMiss = 1
 
@@ -66,7 +68,7 @@ def assign(addr):
             cacheMiss = 0
             break
 
- # checks if miss due to empty way
+    # checks if miss due to empty way
     if cacheMiss == 1:
         for j in range(ways):
             if cache[int(index, 0)][j]["val"] == 0:
@@ -79,8 +81,6 @@ def assign(addr):
     if cacheMiss == 1:
         missTotal += 1
     requestTotal += 1
-
-
 
     # for loop for replacement policy LRU
     if cacheMiss == 1:
@@ -103,14 +103,14 @@ def assign(addr):
 
 file = open(sys.argv[1])
 
-print("address space: {0}, sets: {1}, set index: {2}, offset: {3}".format(addrSize, sets, indexN, offsetN))
+# print("address space: {0}, sets: {1}, set index: {2}, offset: {3}".format(addrSize, sets, indexN, offsetN))
 
 for line in file:
     addr = line.split()[-1]
     assign(addr)
 for i in range(sets):
-    print("set: {0}".format(i))
+    # print("set: {0}".format(i))
     for j in range(ways):
-        print("{0}, {1}, {2}, {3}".format(cache[i][j]["tag"], cache[i][j]["val"], cache[i][j]["data"], cache[i][j]["history"]))
-    print()
+    #    print("{0}, {1}, {2}, {3}".format(cache[i][j]["tag"], cache[i][j]["val"], cache[i][j]["data"], cache[i][j]["history"]))
+    # print()
 print("Miss Rate: {0}%".format((float(missTotal)/float(requestTotal))*100))
